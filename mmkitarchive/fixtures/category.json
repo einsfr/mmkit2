@@ -1,0 +1,25 @@
+[
+  {
+    "model": "mmkitarchive.Category",
+    "pk": 1,
+    "fields": {
+      "name": "Готовые программы"
+    }
+  },
+
+  {
+    "model": "mmkitarchive.Category",
+    "pk": 2,
+    "fields": {
+      "name": "Исходные материалы"
+    }
+  },
+
+  {
+    "model": "mmkitarchive.Category",
+    "pk": 3,
+    "fields": {
+      "name": "Смонтированные репортажи"
+    }
+  }
+]
