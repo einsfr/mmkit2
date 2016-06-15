@@ -27,13 +27,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'mmkitarchive',
-    'rest_framework'
+    'mmkitcommon',
 ]
 
 import_settings(
     globals(),
-    ['common', APP_ENV, 'local', '{}-local'.format(APP_ENV.lower())],
+    [r'*@mmkit', 'common', APP_ENV, 'local', '{}-local'.format(APP_ENV.lower())],
     INSTALLED_APPS,
     ('INSTALLED_APPS', )
 )
