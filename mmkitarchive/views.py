@@ -1,13 +1,15 @@
-from rest_framework import generics
+from rest_framework import viewsets
 
-from mmkitarchive import models, serializers
-
-
-class ItemList(generics.ListCreateAPIView):
-    queryset = models.Item.objects.all()
-    serializer_class = serializers.ItemSerializer
+from mmkitcommon.viewsets import MultipleSerializerViewSetMixin
+from mmkitarchive.models import Item
+from mmkitarchive.serializers import ItemDefaultSerializer, ItemListSerializer
 
 
-class ItemDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = models.Item.objects.all()
-    serializer_class = serializers.ItemSerializer
+class ItemViewSet(MultipleSerializerViewSetMixin, viewsets.ModelViewSet):
+
+    queryset = Item.objects.all()
+    serializer_class = ItemDefaultSerializer
+
+    action_serializer_classes = {
+        'list': ItemListSerializer,
+    }

@@ -1,8 +1,11 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
+from rest_framework.routers import DefaultRouter
 
 from . import views
 
+router = DefaultRouter()
+router.register(r'items', views.ItemViewSet)
+
 urlpatterns = [
-    url(r'^items/$', views.ItemList.as_view()),
-    url(r'^items/(?P<pk>[0-9]+)/$', views.ItemDetail.as_view()),
+    url(r'^', include(router.urls))
 ]

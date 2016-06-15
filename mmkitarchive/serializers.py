@@ -1,17 +1,16 @@
 from rest_framework import serializers
 
-from mmkitarchive import models
+from mmkitarchive.models import Item
 
 
-class CategorySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Category
-        fields = ('name', )
-
-
-class ItemSerializer(serializers.ModelSerializer):
+class ItemDefaultSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.Item
+        model = Item
         fields = ('name', 'description', 'created', 'author', 'category')
+
+
+class ItemListSerializer(ItemDefaultSerializer):
+
+    class Meta(ItemDefaultSerializer.Meta):
+        depth = 1
