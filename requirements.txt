@@ -1,4 +1,6 @@
 django
 django-debug-toolbar
 djangorestframework
+django-filter
+django-crispy-forms
 psycopg2

@@ -70,5 +70,6 @@ LANGUAGES = [
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend', ),
     'PAGE_SIZE': 20,
 }
