@@ -12,8 +12,12 @@ class ItemDefaultSerializer(serializers.ModelSerializer):
 
 class ItemListSerializer(ItemDefaultSerializer):
 
+    url = serializers.HyperlinkedIdentityField(
+        view_name='api:mmkitarchive:item-detail'
+    )
+
     class Meta(ItemDefaultSerializer.Meta):
-        fields = ('id', 'name', 'created', 'category')
+        fields = ('url', 'id', 'name', 'created', 'category')
         depth = 1
 
 

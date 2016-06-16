@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 api_patterns = ([
-    url(r'archive/', include('mmkitarchive.urlsapi', namespace='api.mmkitarchive'))
+    url(r'archive/', include('mmkitarchive.urlsapi', namespace='mmkitarchive'))
 ], 'api')
 
 urlpatterns = [
