@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from mmkitjournal.models import ActivityRecordableAbstractModel
 
-class Category(models.Model):
+
+class Category(ActivityRecordableAbstractModel):
     """
     Модель, описывающая категорию элемента архива
     """
@@ -26,7 +28,7 @@ class Category(models.Model):
         return  # TODO
 
 
-class Item(models.Model):
+class Item(ActivityRecordableAbstractModel):
     """
     Модель, описывающая элемент архива
     """
@@ -53,6 +55,7 @@ class Item(models.Model):
         verbose_name=_('дата создания'),
         help_text=_('Дата создания элемента (необязательно)'),
         null=True,
+        db_index=True
     )
 
     author = models.CharField(
@@ -63,8 +66,9 @@ class Item(models.Model):
 
     category = models.ForeignKey(
         Category,
+        on_delete=models.PROTECT,
         related_name='items',
-        verbose_name=_('категория')
+        verbose_name=_('категория'),
     )
 
     def __str__(self):

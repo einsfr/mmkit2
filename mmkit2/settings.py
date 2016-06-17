@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'mmkitarchive',
     'mmkitcommon',
+    'mmkitjournal'
 ]
 
 import_settings(
