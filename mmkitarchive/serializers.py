@@ -3,6 +3,13 @@ from rest_framework import serializers
 from mmkitarchive.models import Item, Category
 
 
+class CategoryDefaultSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name', )
+
+
 class ItemDefaultSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -16,19 +23,19 @@ class ItemListSerializer(ItemDefaultSerializer):
         view_name='api:mmkitarchive:item-detail'
     )
 
+    category = CategoryDefaultSerializer(
+        read_only=True
+    )
+
     class Meta(ItemDefaultSerializer.Meta):
         fields = ('url', 'id', 'name', 'created', 'category')
-        depth = 1
 
 
 class ItemRetrieveSerializer(ItemDefaultSerializer):
 
+    category = CategoryDefaultSerializer(
+        read_only=True
+    )
+
     class Meta(ItemDefaultSerializer.Meta):
-        depth = 1
-
-
-class CategoryDefaultSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Category
-        fields = ('id', 'name', )
+        fields = ('id', 'name', 'description', 'created', 'author', 'category')
