@@ -5,6 +5,8 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.auth.models import User
 
+from mmkitcommon import msgclasses
+
 
 class MessageClass(models.Model):
     """
@@ -49,10 +51,7 @@ class ActivityRecord(models.Model):
         verbose_name_plural = _('записи в журнале активности')
         default_permissions = ()
 
-    id = models.BigIntegerField(
-        primary_key=True,
-        editable=False
-    )
+    # TODO: в качестве первичного ключа здесь нужно будет использовать BigAutoField, который вроде как будет в 1.10
 
     dt = models.DateTimeField(
         auto_now=True,
@@ -91,7 +90,9 @@ class ActivityRecord(models.Model):
         editable=False,
     )
 
-    message = models.TextField()
+    message = models.TextField(
+        blank=True
+    )
 
     def __str__(self):
         return  # TODO
@@ -112,3 +113,14 @@ class ActivityRecordableAbstractModel(models.Model):
         ActivityRecord,
         related_name='+'
     )
+
+    def log_activity(self, **kwargs):
+        ActivityRecord(content_object=self, **kwargs).save()
+
+    def log_activity_create(self, **kwargs):
+        kwargs['message_class'] = MessageClass.objects.get(pk=msgclasses.MMKIT_OBJECT_CREATED)
+        self.log_activity(**kwargs)
+
+    def log_activity_update(self, **kwargs):
+        kwargs['message_class'] = MessageClass.objects.get(pk=msgclasses.MMKIT_OBJECT_UPDATED)
+        self.log_activity(**kwargs)
