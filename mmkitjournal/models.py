@@ -5,7 +5,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.auth.models import User
 
-from mmkitcommon import msgclasses
+from . import msgclasses
 
 
 class MessageClass(models.Model):
