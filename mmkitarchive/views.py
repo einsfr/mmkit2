@@ -8,7 +8,7 @@ from mmkitarchive import serializers, filters
 
 class ItemViewSet(MultipleSerializerViewSetMixin, ActivityRecordableModelViewSet):
 
-    queryset = Item.objects.select_related('category')
+    queryset = Item.objects.select_related('category').all()
     serializer_class = serializers.ItemDefaultSerializer
 
     action_serializer_classes = {

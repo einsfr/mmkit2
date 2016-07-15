@@ -4,6 +4,6 @@ MMKIT_OBJECT_CREATED = 1
 MMKIT_OBJECT_UPDATED = 2
 
 msg_classes = {
-    MMKIT_OBJECT_CREATED: ('MMKIT_OBJECT_CREATED', _('Создан объект')),
-    MMKIT_OBJECT_UPDATED: ('MMKIT_OBJECT_UPDATED', _('Изменён объект')),
+    MMKIT_OBJECT_CREATED: ('MMKIT_OBJECT_CREATED', _('объект создан')),
+    MMKIT_OBJECT_UPDATED: ('MMKIT_OBJECT_UPDATED', _('объект изменён')),
 }
