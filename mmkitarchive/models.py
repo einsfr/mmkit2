@@ -27,6 +27,10 @@ class Category(ActivityRecordableAbstractModel):
     def get_absolute_url(self):
         return  # TODO
 
+    @staticmethod
+    def get_api_detail_view_name():
+        return 'api:mmkitarchive:category-detail'
+
 
 class Item(ActivityRecordableAbstractModel):
     """
@@ -76,3 +80,7 @@ class Item(ActivityRecordableAbstractModel):
 
     def get_absolute_url(self):
         return  # TODO
+
+    @staticmethod
+    def get_api_detail_view_name():
+        return 'api:mmkitarchive:item-detail'

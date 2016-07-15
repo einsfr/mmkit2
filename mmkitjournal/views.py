@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from rest_framework.viewsets import GenericViewSet
+from rest_framework.mixins import ListModelMixin
 
-# Create your views here.
+from mmkitjournal.models import ActivityRecord
+from mmkitjournal import serializers
+
+
+class ActivityRecordViewSet(ListModelMixin, GenericViewSet):
+
+    queryset = ActivityRecord.objects.select_related('message_class', 'user', 'content_type').all()
+    serializer_class = serializers.ActivityRecordDefaultSerializer

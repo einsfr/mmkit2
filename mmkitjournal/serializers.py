@@ -5,7 +5,7 @@ from mmkitjournal.models import ActivityRecord
 
 class ActivityRecordDefaultSerializer(serializers.ModelSerializer):
 
-    content_type = serializers.StringRelatedField()
+    # object_url = TODO:
 
     user = serializers.StringRelatedField()  # TODO: проверить, как это будет вести себя с user = None
 
@@ -13,4 +13,4 @@ class ActivityRecordDefaultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ActivityRecord
-        fields = ('id', 'dt', 'content_type', 'object_id', 'user', 'message_class', 'message')
+        fields = ('id', 'dt', 'user', 'message_class', 'message')
