@@ -75,6 +75,11 @@ class Item(ActivityRecordableAbstractModel):
         verbose_name=_('категория'),
     )
 
+    linked = models.ManyToManyField(
+        "self",
+        verbose_name=_('связанные элементы')
+    )
+
     def __str__(self):
         return self.name
 

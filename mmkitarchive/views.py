@@ -26,5 +26,5 @@ class CategoryViewSet(MultipleSerializerViewSetMixin, ActivityRecordableModelVie
     serializer_class = serializers.CategoryDefaultSerializer
 
     action_serializer_classes = {
-        'list': serializers.CategoryListSerializer,
+        'retrieve': serializers.CategoryRetrieveSerializer,
     }
