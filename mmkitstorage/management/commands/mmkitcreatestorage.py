@@ -52,8 +52,8 @@ class Command(BaseCommand):
             action='store_true',
             dest='test_run',
             default=False,
-            help=_('Если флаг установлен, то фактически никакие операции с файловой системой и базой данных проводиться '
-                   'не будут. Используется для тестовых нужд.')
+            help=_('Если флаг установлен, то фактически никакие операции с файловой системой и базой данных '
+                   'проводиться не будут. Используется для тестовых нужд.')
         )
 
     def handle(self, *args, **options):
@@ -86,7 +86,7 @@ class Command(BaseCommand):
             raise CommandError(_('Хранилище с такой базовой директорией уже существует.'))
         if verbosity > 1:
             print('Создание экземпляра модели хранилища...')
-        s = Storage(id=options['id'] if options['id'] else None, name=options['name'], base_dir = base_dir,
+        s = Storage(id=options['id'] if options['id'] else None, name=options['name'], base_dir=base_dir,
                     read_only=not options['read_write'])
         if verbosity > 1:
             print('Валидация модели...')

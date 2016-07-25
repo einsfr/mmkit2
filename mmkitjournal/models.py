@@ -97,7 +97,7 @@ class ActivityRecord(models.Model):
     def __str__(self):
         return  # TODO
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return  # TODO
 
 
@@ -114,13 +114,13 @@ class ActivityRecordableAbstractModel(models.Model):
         related_name='+'
     )
 
-    def log_activity(self, **kwargs):
+    def log_activity(self, **kwargs) -> None:
         ActivityRecord(content_object=self, **kwargs).save()
 
-    def log_activity_create(self, **kwargs):
+    def log_activity_create(self, **kwargs) -> None:
         kwargs['message_class'] = MessageClass.objects.get(pk=msgclasses.MMKIT_OBJECT_CREATED)
         self.log_activity(**kwargs)
 
-    def log_activity_update(self, **kwargs):
+    def log_activity_update(self, **kwargs) -> None:
         kwargs['message_class'] = MessageClass.objects.get(pk=msgclasses.MMKIT_OBJECT_UPDATED)
         self.log_activity(**kwargs)
