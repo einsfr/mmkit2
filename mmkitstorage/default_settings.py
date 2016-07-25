@@ -2,4 +2,8 @@ import os
 
 base_dir = os.environ.get('BASE_DIR')
 
-MMKIT_STORAGES_ROOT_DIR = os.path.normpath(os.path.join(base_dir, '../storages'))
+MMKIT_STORAGES_ROOT_DIR = os.path.join(base_dir, '../storages')
+MMKIT_STORAGES_FORBID_ROOT_REWRITE = True
+MMKIT_STORAGES_FORBID_BASE_REWRITE = True
+MMKIT_STORAGES_ROOT_MODE = 0o755
+MMKIT_STORAGES_BASE_MODE = 0o755

@@ -1,5 +1,7 @@
 import uuid
 import os
+from urllib import parse
+import shutil
 
 from django.db import models
 from django.contrib.postgres.fields import HStoreField, ArrayField
@@ -7,7 +9,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
 from mmkitjournal.models import ActivityRecordableAbstractModel
-from mmkitcommon.utils import urlformatter, fs
+from mmkitcommon.utils import fs as fs_utils
+from . import exceptions as storage_exceptions
 
 
 class StorageObject(models.Model):
@@ -37,7 +40,7 @@ class StorageObject(models.Model):
         help_text=_('Путь к объекту относительно корня хранилища (не более 255 символов)')
     )
 
-    def get_url(self, protocol: str) -> urlformatter.UrlFormatResult:
+    def get_url(self, protocol: str) -> str:
         return self.storage.get_url(self, protocol)
 
     def get_relative_path(self, inner_path: str = None) -> str:
@@ -56,6 +59,9 @@ class Storage(ActivityRecordableAbstractModel):
         verbose_name = 'хранилище'
         verbose_name_plural = 'хранилища'
         default_permissions = ()
+
+    INIT_MODE_SKIP_IF_EXISTS = 0
+    INIT_MODE_REWRITE_IF_EXISTS = 1
 
     id = models.UUIDField(
         primary_key=True,
@@ -109,12 +115,12 @@ class Storage(ActivityRecordableAbstractModel):
     def get_api_detail_view_name() -> str:
         return  # TODO
 
-    def get_url(self, obj: StorageObject, protocol: str) -> urlformatter.UrlFormatResult:
+    def get_url(self, obj: StorageObject, protocol: str) -> str:
         try:
             base_url = self.access_protocols[protocol]
         except KeyError:
             return None
-        return urlformatter.format_url('{}/{}'.format(base_url, obj.path)),
+        return parse.urljoin(base_url, obj.path, allow_fragments=False)
 
     def get_base_path(self) -> str:
         return os.path.normpath(os.path.join(
@@ -140,3 +146,50 @@ class Storage(ActivityRecordableAbstractModel):
         except StorageObject.DoesNotExist:
             obj = StorageObject(path=path, storage=self).save()
         return obj
+
+    def contains(self, path: str, check_existence: bool = True) -> bool:
+        base_path = self.get_base_path()
+        full_path = os.path.normpath(os.path.join(base_path, path))
+        return fs_utils.in_path(base_path, full_path) and (not check_existence or os.path.exists(full_path))
+
+    @classmethod
+    def init_storage_root(cls, init_mode: int = INIT_MODE_SKIP_IF_EXISTS) -> None:
+        storages_root = os.path.normpath(settings.MMKIT_STORAGES_ROOT_DIR)
+        if not os.path.exists(storages_root):
+            os.makedirs(storages_root, settings.MMKIT_STORAGES_ROOT_MODE)
+        else:
+            if init_mode == cls.INIT_MODE_SKIP_IF_EXISTS:
+                pass  # TODO: добавить запись в лог с уведомлением
+            elif init_mode == cls.INIT_MODE_REWRITE_IF_EXISTS:
+                if settings.MMKIT_STORAGES_FORBID_ROOT_REWRITE:
+                    raise RuntimeError(storage_exceptions.STORAGES_ROOT_REWRITE_FORBIDDEN)
+                else:
+                    # Предварительное переименования появилось из-за того, что в Windows существует задержка между
+                    # исполнением команды rmtree и фактическим удалением папки, а переименование происходит сразу
+                    tmp_name = '_{}'.format(storages_root)
+                    os.rename(storages_root, tmp_name)
+                    shutil.rmtree(tmp_name)
+                    os.mkdir(storages_root, settings.MMKIT_STORAGES_ROOT_MODE)
+            else:
+                raise ValueError(storage_exceptions.STORAGES_INIT_MODE_UNKNOWN)
+
+    def init_storage_base(self, init_mode: int = INIT_MODE_SKIP_IF_EXISTS) -> None:
+        storages_root = os.path.normpath(settings.MMKIT_STORAGES_ROOT_DIR)
+        if not os.path.exists(storages_root):
+            raise RuntimeError(storage_exceptions.STORAGES_ROOT_NOT_FOUND % {'root_dir': storages_root})
+        base_path = self.get_base_path()
+        if not os.path.exists(base_path):
+            os.mkdir(base_path, settings.MMKIT_STORAGES_BASE_MODE)
+        else:
+            if init_mode == self.INIT_MODE_SKIP_IF_EXISTS:
+                pass  # TODO: добавить запись в лог с уведомлением
+            elif init_mode == self.INIT_MODE_REWRITE_IF_EXISTS:
+                if settings.MMKIT_STORAGES_FORBID_BASE_REWRITE:
+                    raise RuntimeError(storage_exceptions.STORAGES_BASE_REWRITE_FORBIDDEN)
+                else:
+                    tmp_name = '_{}'.format(base_path)
+                    os.rename(base_path, tmp_name)
+                    shutil.rmtree(tmp_name)
+                    os.mkdir(base_path, settings.MMKIT_STORAGES_BASE_MODE)
+            else:
+                raise ValueError(storage_exceptions.STORAGES_INIT_MODE_UNKNOWN)
