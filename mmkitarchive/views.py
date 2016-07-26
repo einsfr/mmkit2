@@ -1,4 +1,6 @@
 from rest_framework.filters import DjangoFilterBackend
+from rest_framework.decorators import detail_route
+from rest_framework.response import Response
 
 from mmkitcommon.viewsets import MultipleSerializerViewSetMixin, MultipleQuerysetViewSetMixin
 from mmkitjournal.viewsets import ActivityRecordableModelViewSet
@@ -18,6 +20,18 @@ class ItemViewSet(MultipleSerializerViewSetMixin, ActivityRecordableModelViewSet
 
     filter_backends = (DjangoFilterBackend, )
     filter_class = filters.ItemFilter
+
+    @detail_route(methods=['GET'])
+    def links(self, request, pk=None):
+        item = Item.objects.get(pk=pk)
+        linked_items = item.linked.all()
+        page = self.paginate_queryset(linked_items)
+        if page is not None:
+            serializer = serializers.ItemLinkSerializer(page, many=True, context={'request': request})
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = serializers.ItemLinkSerializer(linked_items, many=True, context={'request': request})
+            return Response(serializer.data)
 
 
 class CategoryViewSet(MultipleSerializerViewSetMixin, ActivityRecordableModelViewSet):
