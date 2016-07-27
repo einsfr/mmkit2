@@ -7,11 +7,11 @@ class CategoryDefaultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'url')
+        fields = ('id', 'name')
 
-    url = serializers.HyperlinkedIdentityField(
-        view_name=Category.get_api_detail_view_name()
-    )
+    #url = serializers.HyperlinkedIdentityField(
+    #    view_name=Category.get_api_detail_view_name()
+    #)
 
 
 class CategoryRetrieveSerializer(serializers.ModelSerializer):
@@ -21,7 +21,7 @@ class CategoryRetrieveSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class ItemDefaultSerializer(serializers.ModelSerializer):
+class ItemCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
@@ -32,11 +32,11 @@ class ItemListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ('url', 'id', 'name', 'created', 'category')
+        fields = ('id', 'name', 'created', 'category')
 
-    url = serializers.HyperlinkedIdentityField(
-        view_name=Item.get_api_detail_view_name()
-    )
+    #url = serializers.HyperlinkedIdentityField(
+    #    view_name=Item.get_api_detail_view_name()
+    #)
 
     category = CategoryDefaultSerializer(
         read_only=True
@@ -54,11 +54,11 @@ class ItemLinkSerializer(serializers.ModelSerializer):
     )
 
 
-class ItemRetrieveSerializer(ItemDefaultSerializer):
-
-    class Meta(ItemDefaultSerializer.Meta):
-        pass
-
-    category = CategoryDefaultSerializer(
-        read_only=True
-    )
+#class ItemRetrieveSerializer(ItemDefaultSerializer):
+    #
+    # class Meta(ItemDefaultSerializer.Meta):
+    #     pass
+    #
+    # category = CategoryDefaultSerializer(
+    #     read_only=True
+    # )

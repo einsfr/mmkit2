@@ -1,6 +1,8 @@
 from rest_framework.filters import DjangoFilterBackend
-from rest_framework.decorators import detail_route
-from rest_framework.response import Response
+from rest_framework import generics, mixins
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework import response, schemas
+from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
 from mmkitcommon.viewsets import MultipleSerializerViewSetMixin, MultipleQuerysetViewSetMixin
 from mmkitjournal.viewsets import ActivityRecordableModelViewSet
@@ -8,30 +10,43 @@ from mmkitarchive.models import Item, Category
 from mmkitarchive import serializers, filters
 
 
+@api_view()
+@renderer_classes([OpenAPIRenderer, SwaggerUIRenderer])
+def schema_view(request):
+    generator = schemas.SchemaGenerator(title='API')
+    return response.Response(generator.get_schema(request=request))
+
+
+class ItemListView(mixins.ListModelMixin, generics.GenericAPIView):
+
+    queryset = Item.objects.select_related('category').all()
+    serializer_class = serializers.ItemListSerializer
+    filter_backends = (DjangoFilterBackend, )
+    filter_class = filters.ItemFilter
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, args, kwargs)
+
+
+class ItemCreateView(mixins.CreateModelMixin, generics.GenericAPIView):
+
+    serializer_class = serializers.ItemCreateSerializer
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
 class ItemViewSet(MultipleSerializerViewSetMixin, ActivityRecordableModelViewSet):
 
     queryset = Item.objects.select_related('category').all()
-    serializer_class = serializers.ItemDefaultSerializer
 
     action_serializer_classes = {
         'list': serializers.ItemListSerializer,
-        'retrieve': serializers.ItemRetrieveSerializer,
+        # 'retrieve': serializers.ItemRetrieveSerializer,
     }
 
     filter_backends = (DjangoFilterBackend, )
     filter_class = filters.ItemFilter
-
-    @detail_route(methods=['GET'])
-    def links(self, request, pk=None):
-        item = Item.objects.get(pk=pk)
-        linked_items = item.linked.all()
-        page = self.paginate_queryset(linked_items)
-        if page is not None:
-            serializer = serializers.ItemLinkSerializer(page, many=True, context={'request': request})
-            return self.get_paginated_response(serializer.data)
-        else:
-            serializer = serializers.ItemLinkSerializer(linked_items, many=True, context={'request': request})
-            return Response(serializer.data)
 
 
 class CategoryViewSet(MultipleSerializerViewSetMixin, ActivityRecordableModelViewSet):
