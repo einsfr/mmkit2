@@ -4,7 +4,7 @@ from mmkitjournal.models import ActivityRecord
 from mmkitcommon.serializers import ContentTypeDefaultSerializer
 
 
-class ActivityRecordDefaultSerializer(serializers.ModelSerializer):
+class ActivityRecordListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ActivityRecord

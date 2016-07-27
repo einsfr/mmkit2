@@ -29,7 +29,7 @@ class Category(ActivityRecordableAbstractModel):
 
     @staticmethod
     def get_api_detail_view_name() -> str:
-        return 'api:mmkitarchive:category-detail'
+        return 'api:mmkitarchive:categories:detail'
 
 
 class Item(ActivityRecordableAbstractModel):
@@ -88,4 +88,4 @@ class Item(ActivityRecordableAbstractModel):
 
     @staticmethod
     def get_api_detail_view_name() -> str:
-        return 'api:mmkitarchive:item-detail'
+        return 'api:mmkitarchive:items:detail'

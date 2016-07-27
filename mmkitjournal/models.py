@@ -100,6 +100,10 @@ class ActivityRecord(models.Model):
     def get_absolute_url(self) -> str:
         return  # TODO
 
+    @staticmethod
+    def get_api_detail_view_name() -> str:
+        return 'api:mmkitjournal:activityrecords:detail'  # TODO: надо ещё это реализовать
+
 
 class ActivityRecordableAbstractModel(models.Model):
     """

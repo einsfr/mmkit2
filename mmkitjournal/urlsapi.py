@@ -1,11 +1,11 @@
 from django.conf.urls import url, include
-from rest_framework.routers import DefaultRouter
 
 from . import views
 
-router = DefaultRouter()
-router.register(r'activityrecords', views.ActivityRecordViewSet)
+activityrecords_patterns = [
+    url(r'^$', views.ActivityRecordView.as_view(), name='list')
+]
 
 urlpatterns = [
-    url(r'^', include(router.urls))
+    url(r'^activityrecords/', include(activityrecords_patterns, namespace='activityrecords'))
 ]

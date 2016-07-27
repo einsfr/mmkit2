@@ -1,22 +1,18 @@
 from django.conf.urls import url, include
-from rest_framework.routers import DefaultRouter
 
 from . import views
 
-#router = DefaultRouter()
-#router.register(r'items', views.ItemViewSet)
-#router.register(r'categories', views.CategoryViewSet)
-
-#urlpatterns = [
-#    url(r'^', include(router.urls))
-#]
-
 items_patterns = [
-    url('^$', views.ItemListView.as_view()),
-    url('^create/$', views.ItemCreateView.as_view())
+    url('^$', views.ItemListCreateView.as_view(), name='list'),
+    url('^(?P<pk>\d+)/$', views.ItemRetrieveUpdateView.as_view(), name='detail')
+]
+
+categories_patterns = [
+    url('^$', views.CategoryListCreateView.as_view(), name='list'),
+    url('^(?P<pk>\d+)/$', views.CategoryRetrieveUpdateView.as_view(), name='detail'),
 ]
 
 urlpatterns = [
-    url(r'^$', views.schema_view),
-    url(r'^items/', include(items_patterns)),
+    url(r'^items/', include(items_patterns, namespace='items')),
+    url(r'^categories/', include(categories_patterns, namespace='categories'))
 ]
