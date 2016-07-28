@@ -11,4 +11,4 @@ class ItemFilter(filters.FilterSet):
 
     class Meta:
         model = Item
-        fields = ['category', 'created_min', 'created_max']
+        fields = ['category', 'created_min', 'created_max', 'linked']
