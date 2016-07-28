@@ -8,7 +8,7 @@ class ActivityRecordListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ActivityRecord
-        fields = ('id', 'dt', 'content_type', 'user', 'message_class', 'message')
+        fields = ('id', 'dt', 'content_type', 'object_id', 'user', 'message_class', 'message')
 
     content_type = ContentTypeDefaultSerializer(read_only=True)
 

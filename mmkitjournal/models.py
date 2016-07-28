@@ -50,6 +50,7 @@ class ActivityRecord(models.Model):
         verbose_name = _('запись в журнале активности')
         verbose_name_plural = _('записи в журнале активности')
         default_permissions = ()
+        ordering = ('-id', )
 
     # TODO: в качестве первичного ключа здесь нужно будет использовать BigAutoField, который вроде как будет в 1.10
 
