@@ -11,4 +11,4 @@ class ActivityRecordFilter(filters.FilterSet):
 
     class Meta:
         model = ActivityRecord
-        fields = ['dt_min', 'dt_max']
+        fields = ['dt_min', 'dt_max', 'content_type', 'object_id']
