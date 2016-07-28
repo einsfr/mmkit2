@@ -38,5 +38,5 @@ import_settings(
     globals(),
     [r'*@mmkit', 'common', APP_ENV, 'local', '{}-local'.format(APP_ENV.lower())],
     INSTALLED_APPS,
-    ('INSTALLED_APPS', )
+    ('INSTALLED_APPS', 'REST_FRAMEWORK')
 )
